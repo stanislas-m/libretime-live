@@ -14,8 +14,13 @@ import (
 
 var location *time.Location
 
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+}
+
 func setupRouter(fetcher APIFetcher) {
 	http.HandleFunc("/v1/live", func(w http.ResponseWriter, r *http.Request) {
+		enableCors(&w)
 		live := fetcher.Live()
 		if err := json.NewEncoder(w).Encode(live); err != nil {
 			w.WriteHeader(500)
